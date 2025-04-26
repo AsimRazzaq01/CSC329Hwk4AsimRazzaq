@@ -41,6 +41,18 @@ public class MyGraph {
         adjacencyList.get(v2).add(edge);
     }
 
+    public void showGraph() {
+        for (int v : vertices) {
+            System.out.print("Vertex " + v +": ");
+            for (Edge edge : adjacencyList.get(v)) {
+                //int neighbor = (edge.v1 == v) ? edge.v2 : edge.v1;
+                //System.out.print(" - [ Vertex " + neighbor + ", (weight: " + edge.weight + ") ] ");
+                System.out.printf(" (%d, %d, %d) " ,edge.v1, edge.v2, edge.weight);
+            }
+            System.out.println();
+        }
+    }
+
 
     // connected components
     public static int[] calculateConnectedComponents(MyGraph g) {

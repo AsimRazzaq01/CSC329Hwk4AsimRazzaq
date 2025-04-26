@@ -1,18 +1,87 @@
 package org.example;
 
-import com.sun.nio.sctp.SctpStandardSocketOptions;
+import java.util.*;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import static org.example.MyGraph.calculateConnectedComponents;
 
 /**
  * @author asim razzaq
  * Main Class
+ * getMinDistVertex method
+ * shortestPath method
  * getMinFrontierEdge method
  * minimumSpanningTree method
+ * printGraphEdges method
  */
 public class Main {
+
+    public static int getMinDistVertex(List<Integer> unvisitedList, int[] dist) {
+        int minNeighborVertex = unvisitedList.get(0);
+        int minNeighborDist = dist[minNeighborVertex];
+
+        for (int v : unvisitedList) {
+            if (dist[v] < minNeighborDist) {
+                minNeighborDist = dist[v];
+                minNeighborVertex = v;
+            }
+        }
+        return minNeighborVertex;
+    } // End getMinDistVertex method
+
+    public static void shortestPath(MyGraph g, int startingVertex) {
+        int maxVertex = g.vertices.size();
+        int[] dist = new int[maxVertex ];
+        int[] prev = new int[maxVertex ];
+        boolean[] visited = new boolean[maxVertex ];
+
+        // Create unvisited list and add all vertices
+        List<Integer> unvisitedList = new ArrayList<>(g.vertices);
+
+        // Initialize distances
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        Arrays.fill(prev, -1);
+        Arrays.fill(visited, false);
+
+        // Set starting vertex distance to 0
+        dist[startingVertex] = 0;
+
+
+        // While unvisitedList is not empty
+        while (!unvisitedList.isEmpty()) {
+            int currV = getMinDistVertex(unvisitedList, dist);
+            unvisitedList.remove(Integer.valueOf(currV));
+            visited[currV] = true;
+
+            // For all unvisited neighbors of currV
+            for (Edge e : g.adjacencyList.get(currV)) {
+                int neighbor = (e.v1 == currV) ? e.v2 : e.v1;
+                if (!visited[neighbor]) {
+                    int possibleDist = dist[currV] + e.weight;
+                    if (possibleDist < dist[neighbor]) {
+                        dist[neighbor] = possibleDist;
+                        prev[neighbor] = currV;
+                    }
+                }
+            }
+        }
+
+        // Print results
+        System.out.println("Shortest Path Data");
+        System.out.println("Starting Vertex : " + startingVertex);
+
+        System.out.println("\nVertex Dist");
+        for (int v : g.vertices) {
+            System.out.printf(" %2d , %2d\n", v, dist[v]);
+        }
+
+        System.out.println("\nVertex Previous");
+        for (int v : g.vertices) {
+            System.out.printf(" %2d , %2d\n", v, prev[v]);
+        }
+    } // End shortestPath method
+
+
+
 
     public static Edge getMinFrontierEdge(MyGraph g, boolean[] visited) {
         Edge minEdge = null;
@@ -42,6 +111,8 @@ public class Main {
         }
         return minEdge;
     } // End getMinFrontierEdge method
+
+
 
 
 
@@ -108,23 +179,152 @@ public class Main {
         }
     } // End printGraphEdges method
 
+//    private static void printGraphEdges(MyGraph g) {
+//        // use hashset to stop problem of repeat printing of v,e
+//        Set<String> printed = new HashSet<>();
+//
+//        // loop through vertices
+//        for (int v : g.vertices) {
+//            // loop through edges in adjacencyList
+//            for (Edge e : g.adjacencyList.get(v)) {
+//                int a = Math.min(e.v1, e.v2);
+//                int b = Math.max(e.v1, e.v2);
+//                String edgeKey = a + "-" + b;
+//                if (!printed.contains(edgeKey)) {
+//                    System.out.printf("Vertex: %d  (%d, %d, %d)\n", v ,e.v1, e.v2, e.weight);
+//
+//                    // System.out.printf("Vertex: %d is connected to: %d, weight: %d\n", e.v1, e.v2, e.weight);
+//                    printed.add(edgeKey);
+//                }
+//            }
+//        }
+//    } // End printGraphEdges method
+
 
     public static void main(String[] args) {
-        MyGraph g = new MyGraph();
+        // connected components graph = ccg
+        MyGraph ccg = new MyGraph();
 
+        // Part 7 Main (connected components) - Add vertices 0-9
+        for (int i = 0; i < 10; i++) {
+            ccg.addVertex(i);
+        }
+
+        // add edges
+        // v = 0
+        ccg.addEdge(0, 1, 2);
+        ccg.addEdge(0, 2, 13);
+        // v = 1
+        ccg.addEdge(1, 0, 2);
+        // v = 2
+        ccg.addEdge(2, 0, 13);
+        // v = 3
+        ccg.addEdge(3, 5, 1);
+        // v = 4
+        ccg.addEdge(4, 7, 1);
+        // v = 5
+        ccg.addEdge(5, 3, 1);
+        // v = 6
+        ccg.addEdge(6, 8, 1);
+        // v = 7
+        ccg.addEdge(7, 4, 1);
+        // v = 8
+        ccg.addEdge(8, 9, 4);
+        // v = 9
+        ccg.addEdge(9, 6, 9);
+        //printGraphEdges(ccg);
+
+        int[] componentArray = calculateConnectedComponents(ccg);
+        System.out.println("Vertex Comp #");
+        for (int i = 0; i< componentArray.length; i++) {
+            //System.out.print("   "+i + "    " + componentArray[i]+ "\n");
+            System.out.printf("   %d    %d\n", i, componentArray[i], "\n");
+        }
+
+        // Part 7 Main (Shortest Path & MST) - Add vertices 0-9
+        MyGraph MyGraph = new MyGraph();
+        ArrayList MyG_Array = new ArrayList();
+
+        for (int i = 0; i < 10; i++) {
+            MyGraph.addVertex(i);
+            MyG_Array.add(i);
+        }
+
+        // add edges
+        // v = 0
+        MyGraph.addEdge(0, 1, 2);
+        MyGraph.addEdge(0, 2, 13);
+        MyGraph.addEdge(0, 3, 7);
+        // v = 1
+        MyGraph.addEdge(1, 0, 2);
+        MyGraph.addEdge(1, 3, 2);
+        // v = 2
+        MyGraph.addEdge(2, 0, 13);
+        MyGraph.addEdge(2, 4, 2);
+        MyGraph.addEdge(2, 5, 7);
+        // v = 3
+        MyGraph.addEdge(3, 0, 7);
+        MyGraph.addEdge(3, 1, 2);
+        MyGraph.addEdge(3, 5, 1);
+        MyGraph.addEdge(3, 6, 5);
+        // v = 4
+        MyGraph.addEdge(4, 2, 2);
+        MyGraph.addEdge(4, 7, 1);
+        // v = 5
+        MyGraph.addEdge(5, 2, 7);
+        MyGraph.addEdge(5, 3, 1);
+        MyGraph.addEdge(5, 7, 4);
+        MyGraph.addEdge(5, 8, 1);
+        // v = 6
+        MyGraph.addEdge(6, 3, 5);
+        MyGraph.addEdge(6, 8, 1);
+        MyGraph.addEdge(6, 9, 9);
+        // v = 7
+        MyGraph.addEdge(7, 4, 1);
+        MyGraph.addEdge(7, 5, 4);
+        MyGraph.addEdge(7, 8, 2);
+        // v = 8
+        MyGraph.addEdge(8, 5, 1);
+        MyGraph.addEdge(8, 6, 1);
+        MyGraph.addEdge(8, 7, 2);
+        MyGraph.addEdge(8, 9, 4);
+        // v = 9
+        MyGraph.addEdge(9, 6, 9);
+        MyGraph.addEdge(9, 8, 4);
+
+        System.out.println("V = {" + MyG_Array.toString() + "}");
+
+        shortestPath(MyGraph, 0);
+
+        System.out.println();
+        System.out.println("minimumSpanningTree");
+        MyGraph mst = minimumSpanningTree(MyGraph, 0);
+        mst.showGraph();
+
+
+    } // End main method
+
+} // End Main Class
+
+
+
+
+
+
+// part 6 test sample data
+/*
         // Add vertices 0-4
         for (int i = 0; i < 5; i++) {
             g.addVertex(i);
         }
 
-        // Add edges with weights
-        g.addEdge(0, 1, 2);  // 0-1
-        g.addEdge(0, 3, 6);  // 0-3
-        g.addEdge(1, 2, 3);  // 1-2
-        g.addEdge(1, 3, 8);  // 1-3
-        g.addEdge(1, 4, 5);  // 1-4
-        g.addEdge(2, 4, 7);  // 2-4
-        g.addEdge(3, 4, 9);  // 3-4
+        g.addEdge(0, 1, 1);  // 0-1
+        g.addEdge(0, 2, 3);  // 0-3
+        g.addEdge(1, 2, 1);  // 1-2
+        g.addEdge(1, 4, 6);  // 1-3
+        g.addEdge(1, 3, 2);  // 1-4
+        g.addEdge(2, 3, 1);  // 2-4
+        g.addEdge(3, 4, 2);  // 3-4
 
         // Calculate MST starting from vertex 0
         MyGraph mst = minimumSpanningTree(g, 0);
@@ -134,6 +334,8 @@ public class Main {
 
         System.out.println("\nMinimum Spanning Tree Edges:");
         printGraphEdges(mst);
-    }
-}
 
+        System.out.println();
+
+        shortestPath(g, 0);
+ */
