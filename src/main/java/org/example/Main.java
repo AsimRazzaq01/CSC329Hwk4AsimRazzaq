@@ -12,6 +12,7 @@ import static org.example.MyGraph.calculateConnectedComponents;
  * getMinFrontierEdge method
  * minimumSpanningTree method
  * printGraphEdges method
+ * main method
  */
 public class Main {
 
@@ -62,8 +63,9 @@ public class Main {
                         prev[neighbor] = currV;
                     }
                 }
-            }
-        }
+            } // End for loop
+
+        } // End while loop
 
         // Print results
         System.out.println("Shortest Path Data");
@@ -78,9 +80,8 @@ public class Main {
         for (int v : g.vertices) {
             System.out.printf(" %2d , %2d\n", v, prev[v]);
         }
+
     } // End shortestPath method
-
-
 
 
     public static Edge getMinFrontierEdge(MyGraph g, boolean[] visited) {
@@ -106,10 +107,12 @@ public class Main {
                             minWeight = e.weight;
                         }
                     }
-                }
+                } // End inner for loop
             }
-        }
+        } // End outer for loop
+
         return minEdge;
+
     } // End getMinFrontierEdge method
 
 
@@ -175,32 +178,14 @@ public class Main {
                     System.out.printf("Vertex: %d is connected to: %d, weight: %d\n", e.v1, e.v2, e.weight);
                     printed.add(edgeKey);
                 }
-            }
-        }
+            } // End inner for loop
+        } // End outer for loop
     } // End printGraphEdges method
 
-//    private static void printGraphEdges(MyGraph g) {
-//        // use hashset to stop problem of repeat printing of v,e
-//        Set<String> printed = new HashSet<>();
-//
-//        // loop through vertices
-//        for (int v : g.vertices) {
-//            // loop through edges in adjacencyList
-//            for (Edge e : g.adjacencyList.get(v)) {
-//                int a = Math.min(e.v1, e.v2);
-//                int b = Math.max(e.v1, e.v2);
-//                String edgeKey = a + "-" + b;
-//                if (!printed.contains(edgeKey)) {
-//                    System.out.printf("Vertex: %d  (%d, %d, %d)\n", v ,e.v1, e.v2, e.weight);
-//
-//                    // System.out.printf("Vertex: %d is connected to: %d, weight: %d\n", e.v1, e.v2, e.weight);
-//                    printed.add(edgeKey);
-//                }
-//            }
-//        }
-//    } // End printGraphEdges method
-
-
+    /**
+     * main method
+     * @param args
+     */
     public static void main(String[] args) {
         // connected components graph = ccg
         MyGraph ccg = new MyGraph();
@@ -305,6 +290,34 @@ public class Main {
     } // End main method
 
 } // End Main Class
+
+
+
+
+
+
+    /*
+    private static void printGraphEdges(MyGraph g) {
+        // use hashset to stop problem of repeat printing of v,e
+        Set<String> printed = new HashSet<>();
+
+        // loop through vertices
+        for (int v : g.vertices) {
+            // loop through edges in adjacencyList
+            for (Edge e : g.adjacencyList.get(v)) {
+                int a = Math.min(e.v1, e.v2);
+                int b = Math.max(e.v1, e.v2);
+                String edgeKey = a + "-" + b;
+                if (!printed.contains(edgeKey)) {
+                    System.out.printf("Vertex: %d  (%d, %d, %d)\n", v ,e.v1, e.v2, e.weight);
+
+                    // System.out.printf("Vertex: %d is connected to: %d, weight: %d\n", e.v1, e.v2, e.weight);
+                    printed.add(edgeKey);
+                }
+            }
+        }
+    } // End printGraphEdges method
+     */
 
 
 

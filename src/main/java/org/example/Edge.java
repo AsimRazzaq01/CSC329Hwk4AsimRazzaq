@@ -10,10 +10,10 @@ public class Edge {
     int v2 ;
     int weight ;
 
-    // Constructor to set variables
+    // Constructor to set all variables
     public Edge(int v1, int v2, int weight) {
         this.v1 = v1;
         this.v2 = v2;
         this.weight = weight;
     }
-}
+} // End Edge class

@@ -2,11 +2,15 @@ package org.example;
 
 import java.util.*;
 
+/**
+ * MyGraph Class
+ * methods -> MyGraph, addVertex, addEdge, showGraph, calculateConnectedComponents
+ */
 public class MyGraph {
 
     // Member Variables
     List<Integer> vertices;                     // List of vertices
-    Map<Integer, List<Edge>> adjacencyList;
+    Map<Integer, List<Edge>> adjacencyList;     // Map of vertices to edges
 
     // Default Constructor
     MyGraph(){
@@ -41,6 +45,7 @@ public class MyGraph {
         adjacencyList.get(v2).add(edge);
     }
 
+    // method to print neatly for later steps
     public void showGraph() {
         for (int v : vertices) {
             System.out.print("Vertex " + v +": ");
@@ -90,10 +95,11 @@ public class MyGraph {
                             compMap.put(destVertex, numComponents);     // Mark as visited
                             bfsQueue.add(destVertex);
                         }
-                    }
-                }
+                    } // End inner For Loop
+                } // End while Loop
             }
-        }
+        } // End outer For Loop
+
 
         // Convert the map to an array in the same order as the vertices list
         int[] componentArray = new int[numVertices];
@@ -103,13 +109,5 @@ public class MyGraph {
 
         return componentArray;
     }  // End calculateConnectedComponents method
-
-
-
-
-
-
-
-
 
 } // End MyGraph class
